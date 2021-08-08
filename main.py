@@ -77,8 +77,6 @@ defaults = {'actual': {'c': 'kbc', 't': 30, 'w': 3., 'r': 1.},
 # Dev options
 TEST = False
 DEFAULTS = defaults['test'] if TEST else defaults['actual']
-    
-
 
 
 def main(args):
@@ -221,7 +219,6 @@ class Round:
         for k, v in dct.items():
             dct[k] = v / total
         return dct
-
 
 
 if __name__ == '__main__':
