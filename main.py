@@ -93,7 +93,7 @@ def parse_args(args):
                         default=DEFAULTS['c'])
     parser.add_argument('-t', '--time',
                         help='time (min)',
-                        type=int,
+                        type=float,
                         default=DEFAULTS['t'])
     parser.add_argument('-w', '--work',
                         help='work time per round (min)',
