@@ -118,6 +118,7 @@ class Workout:
     - kb:  Kickboxing only    (kb, break, kb, break...)
     - bc:  Boxing circuit     (b, break, other, break...)
     - kbc: Kickboxing circuit (kb, break, other, break...)
+    - c:   Circuit only       (other, break, other, break...)
     '''
     def __init__(self, category, time, work, rest):
         self.cat = category
@@ -126,8 +127,7 @@ class Workout:
         round_t = work + rest
         self.n_rounds = int(self.total_t // round_t)
         tot_workout_time = self.n_rounds * self.work_t
-        tot_rest_time = self.total_t - tot_workout_time
-        self.rest_t = tot_rest_time / self.n_rounds
+        self.rest_t = rest
         self.rounds = self._generate_rounds()
 
     def __str__(self):
@@ -138,32 +138,31 @@ class Workout:
             'kbc': 'kickboxing circuit'
         }[self.cat]
         return (f'A {self.total_t} min {workout_type} workout:\n'
+                f'{self.n_rounds} rounds of\n'
                 f'  Work: {self.work_t:.2f} min\n'
                 f'  Rest: {self.rest_t:.2f} min')
 
     def _generate_rounds(self):
         seq = {
-            'b': ['box', 'rest'],
-            'kb': ['kickbox', 'rest'],
-            'bc': ['box', 'rest', 'other', 'rest'],
-            'kbc': ['kickbox', 'rest', 'other', 'rest']
+            'b': ['box'],
+            'kb': ['kickbox'],
+            'bc': ['box', 'other'],
+            'kbc': ['kickbox', 'other']
         }[self.cat]
         rounds = []
         while len(rounds) < self.n_rounds:
             rounds += seq
-        rounds = rounds[:self.n_rounds + 1]
+        rounds = rounds[:self.n_rounds]
         return rounds
 
     def start(self):
         rest_s = int(round(self.rest_t * 60))
         print('Rounds:', self.rounds)
         for rnd in self.rounds:
-            if rnd == 'rest':
-                say(f'Rest for the next {rest_s} seconds')
-                sleep(rest_s)
-            else:
-                r = Round(rnd, self.work_t)
-                r.start()
+            r = Round(rnd, self.work_t)
+            r.start()
+            say(f'Rest for the next {rest_s} seconds')
+            sleep(rest_s)
 
 
 class Round:
